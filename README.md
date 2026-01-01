@@ -91,6 +91,17 @@ The result is a scalable, repeatable, and hands-free content creation pipeline.
 5. View generated LinkedIn content in the sheet
 
 ---
+## Workflow Overview
+
+![Workflow Overview](screenshot/workflow_overview.png)
+
+---
+
+## Google Sheets Input / Output
+
+![Google Sheets](screenshot/google_sheet.png)
+
+---
 
 ## 🎥 Demo
 
