@@ -106,7 +106,7 @@ The result is a scalable, repeatable, and hands-free content creation pipeline.
 ## 🎥 Demo
 
 📺 Loom Walkthrough:  
-https://www.loom.com/share/d18925813bbc479ead4571a9ee1f1fcc
+https://www.loom.com/share/807c46e4685a4109bbc21ed62c47d151
 
 ---
 
