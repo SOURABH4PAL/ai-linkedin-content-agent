@@ -1,4 +1,4 @@
-# ai-linkedin-content-agent
+# ai-linkedin-content-agent-n8n
 
 # AI-Powered LinkedIn Content Generator (n8n)
 
