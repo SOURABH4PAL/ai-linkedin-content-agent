@@ -1,0 +1,281 @@
+{
+  "name": "linkedin content",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "84e6697c-53bc-426b-9204-8c6d964cbde7",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "15TSmJ4DIgAIcxfYV6aI343fu9BC6jLNV2LXRdd7c-KM",
+          "mode": "list",
+          "cachedResultName": "Linkedin Post",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/15TSmJ4DIgAIcxfYV6aI343fu9BC6jLNV2LXRdd7c-KM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/15TSmJ4DIgAIcxfYV6aI343fu9BC6jLNV2LXRdd7c-KM/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Status",
+              "lookupValue": "To Do"
+            }
+          ]
+        },
+        "options": {
+          "returnFirstMatch": true
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        208,
+        0
+      ],
+      "id": "e2cf03eb-c814-4dc2-bfc6-5abfe6f4d783",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "VTciKPhExrKKW8Y5",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.tavily.com/search",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer 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"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"query\": \"Search the web for {{ $json.Topic }}\",\n  \"auto_parameters\": false,\n  \"topic\": \"general\",\n  \"search_depth\": \"basic\",\n  \"chunks_per_source\": 3,\n  \"max_results\": 3,\n  \"time_range\": null,\n  \"start_date\": \"2025-02-09\",\n  \"end_date\": \"2025-12-29\",\n  \"include_answer\": false,\n  \"include_raw_content\": false,\n  \"include_images\": false,\n  \"include_image_descriptions\": false,\n  \"include_favicon\": false,\n  \"include_domains\": [],\n  \"exclude_domains\": [],\n  \"country\": null,\n  \"include_usage\": false\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        400,
+        0
+      ],
+      "id": "11531a16-3b97-4c45-a474-96ce968ee196",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Article 1:  {{ $json.results[0].content }}\nArticle 2: {{ $json.results[1].content }}\nArticle 3: {{ $json.results[2].content }}",
+        "options": {
+          "systemMessage": "=# Overview\nYou are an AI agent responsible for creating a concise, professional LinkedIn post based on three provided articles.\n\n## Context\n- The agent will receive exactly three articles as input.\n- The articles may cover related or complementary topics.\n- The target audience is professionals on LinkedIn.\n- The post should be suitable for public sharing on a professional social network.\n\n## Instructions\n1. Read and understand all three articles.\n2. Identify the common theme, key insights, or most valuable takeaway across the articles.\n3. Synthesize the information into a single, cohesive LinkedIn post.\n4. Write in an inspiring, confident, and professional tone.\n5. Keep the post concise and easy to scan.\n6. Use relevant emojis to enhance engagement without overuse.\n7. Include relevant and popular hashtags aligned with the topic and LinkedIn best practices.\n8. Do not mention the articles explicitly unless contextually necessary.\n9. Do not include URLs unless explicitly provided and required.\n\n## Examples\n- Input:\n  - Article 1: Discusses trends in AI adoption.\n  - Article 2: Covers productivity gains from automation.\n  - Article 3: Explores leadership in tech-driven organizations.\n- Output:\n  - A short LinkedIn post highlighting how AI-driven innovation is reshaping leadership and productivity, ending with relevant hashtags and a few professional emojis.\n\n## SOP (Standard Operating Procedure)\n1. Scan each article for its main message and supporting points.\n2. Note overlapping themes or complementary ideas.\n3. Draft a 3–6 sentence LinkedIn post that:\n   - Opens with a strong, inspiring hook.\n   - Highlights 1–2 key insights.\n   - Ends with a forward-looking or motivational closing line.\n4. Add 3–6 relevant hashtags.\n5. Add 1–3 appropriate emojis.\n6. Review for clarity, professionalism, and conciseness.\n\n## Final Notes\n- Avoid jargon unless it is common in professional LinkedIn discourse.\n- Emojis should support the message, not distract from it.\n- Hashtags should be relevant, readable, and not excessive.\n- The final output should be only the LinkedIn post text.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        608,
+        0
+      ],
+      "id": "7dd2118b-64b2-4bec-89fc-13b0281c6d54",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "15TSmJ4DIgAIcxfYV6aI343fu9BC6jLNV2LXRdd7c-KM",
+          "mode": "list",
+          "cachedResultName": "Linkedin Post",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/15TSmJ4DIgAIcxfYV6aI343fu9BC6jLNV2LXRdd7c-KM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/15TSmJ4DIgAIcxfYV6aI343fu9BC6jLNV2LXRdd7c-KM/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Topic": "={{ $('Get row(s) in sheet').item.json.Topic }}",
+            "Status": "Created",
+            "Content": "={{ $json.output }}"
+          },
+          "matchingColumns": [
+            "Topic"
+          ],
+          "schema": [
+            {
+              "id": "Topic",
+              "displayName": "Topic",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Content",
+              "displayName": "Content",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        960,
+        0
+      ],
+      "id": "0de3f762-72c4-49a3-a4f3-b4b39a51d956",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "VTciKPhExrKKW8Y5",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-120b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        480,
+        208
+      ],
+      "id": "7da38533-4ca0-465f-aaac-a6cf8759b6a2",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "u9C4DAfDzsMdeoe7",
+          "name": "Groq account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "24f8bd3a-2415-48b5-8e7d-573f48982526",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "09194beb883e04ac13e7230557ced85d254de3e2f2acc76f53b07192769ac94b"
+  },
+  "id": "q5bubDD3vvW0dYMu",
+  "tags": []
+}
