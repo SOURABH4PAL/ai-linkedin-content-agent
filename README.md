@@ -99,7 +99,7 @@ The result is a scalable, repeatable, and hands-free content creation pipeline.
 
 ## Google Sheets Input / Output
 
-![Google Sheets](screenshot/google_sheet.png)
+![Google Sheets](screenshot/google_sheets.png)
 
 ---
 
